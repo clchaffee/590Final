@@ -13,6 +13,7 @@ public class CheckpointHoop : MonoBehaviour
     ReplayController replayController;
 
     RaceManager raceManager;
+    Menu menuReference;
 
     private void Awake()
     {
@@ -42,13 +43,35 @@ public class CheckpointHoop : MonoBehaviour
                 //Debug.Log(replayController.frames.Count);
                 raceManager.startTime = Time.time;
                 replayController.StartRecording();
-                string path = Path.Combine(Application.persistentDataPath, "bestGhostReplay.dat");
-                if (File.Exists(path))
+
+
+                if (raceManager.isRacingSelf)
                 {
-                    replayController.replayFrames = replayController.LoadReplay(path);
-                    replayController.PlayReplay();
+                    string path = Path.Combine(Application.persistentDataPath, "bestGhostReplay.dat");
+                    if (File.Exists(path))
+                    {
+                        replayController.replayFrames = replayController.LoadReplay(path);
+                        replayController.PlayReplay();
+                    }
                 }
-                
+                else
+                {
+                    string path;
+                    if(menuReference.selectedScene == "WindingTrack")
+                    {
+                        path = "Assets/Files/WindingTimeToBeat.dat";
+                    }
+                    else
+                    {
+                        path = "Assets/Files/CircuitTimeToBeat.dat";
+                    }
+
+                    if (File.Exists(path))
+                    {
+                        replayController.replayFrames = replayController.LoadReplay(path);
+                        replayController.PlayReplay();
+                    }
+                }
             }
             else if (isEndingHoop)
             {
